@@ -35,7 +35,7 @@ function Uhrprogramm () {
     matrix.writeTextCharset(13, 0, pins.rtc_get_string(pins.rtc_eFormat.ddMM20yy), 8, -2, matrix.eTransparent.u, matrix.matrix_eFaktor(matrix.eFaktor.f1), matrix.matrix_eFaktor(matrix.eFaktor.f3))
     matrix.comment("gedreht")
     matrix.imageArrayDigit(pins.rtc_get_string(pins.rtc_eFormat.hhmss))
-    matrix.writeImageArray(matrix.imageArrayDrehen(matrix.getImages(), matrix.eZeichenDrehen.links), 0, 64, 16, 0, matrix.eTransparent.u, matrix.matrix_eFaktor(matrix.eFaktor.f2), matrix.matrix_eFaktor(matrix.eFaktor.f2))
+    matrix.writeImageArray(matrix.imageArrayDrehen(matrix.matrix_Images(), matrix.eZeichenDrehen.links), 0, 64, 16, 0, matrix.eTransparent.u, matrix.matrix_eFaktor(matrix.eFaktor.f2), matrix.matrix_eFaktor(matrix.eFaktor.f2))
     matrix.displayMatrix()
 }
 input.onButtonEvent(Button.A, input.buttonEventValue(ButtonEvent.Hold), function () {
