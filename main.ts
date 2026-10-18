@@ -26,10 +26,13 @@ input.onButtonEvent(Button.B, input.buttonEventClick(), function () {
     matrix.displayMatrix()
 })
 function Uhrprogramm () {
+    matrix.clearMatrix(8, 15)
+    matrix.writeTextCharset(11, 0, pins.rtc_set_key(pins.keyboard_read()))
     pins.rtc_read()
     pins.rtc_25led(pins.rtc_e25led.Zeit)
     matrix.writeClock(24, 23, 24, pins.rtc_get_int(pins.pins_rtc_eRegister(pins.rtc_eRegister.Stunde)), pins.rtc_get_int(pins.pins_rtc_eRegister(pins.rtc_eRegister.Minute)))
-    matrix.writeDigits(13, 0, pins.rtc_get_string(pins.rtc_eFormat.ddMM20yy), 8, -2, matrix.eTransparent.u, matrix.matrix_eFaktor(matrix.eFaktor.f1), matrix.matrix_eFaktor(matrix.eFaktor.f3))
+    matrix.writeTextCharset(11, 12, pins.rtc_get_string(pins.rtc_eFormat.ddd))
+    matrix.writeTextCharset(13, 0, pins.rtc_get_string(pins.rtc_eFormat.ddMM20yy), 8, -2, matrix.eTransparent.u, matrix.matrix_eFaktor(matrix.eFaktor.f1), matrix.matrix_eFaktor(matrix.eFaktor.f3))
     matrix.comment("gedreht")
     matrix.imageArrayDigit(pins.rtc_get_string(pins.rtc_eFormat.hhmss))
     matrix.writeImageArray(matrix.imageArrayDrehen(matrix.getImages(), matrix.eZeichenDrehen.links), 0, 64, 16, 0, matrix.eTransparent.u, matrix.matrix_eFaktor(matrix.eFaktor.f2), matrix.matrix_eFaktor(matrix.eFaktor.f2))
@@ -70,7 +73,7 @@ input.onButtonEvent(Button.B, input.buttonEventValue(ButtonEvent.Hold), function
         . . # . . . . . . . # . # . # # # . # . . # # . . . . . . . . .
         . . # # # # . # . . . . . . . . . . . . . # . . . . . . . . . .
         `))
-    matrix.displayAnimation(matrix.matrix_Images(), 0, 64, matrix.matrix_eFaktor(matrix.eFaktor.f4), matrix.matrix_eFaktor(matrix.eFaktor.f4))
+    matrix.displayAnimation(matrix.matrix_Images(), 8, 16, matrix.matrix_eFaktor(matrix.eFaktor.f4), matrix.matrix_eFaktor(matrix.eFaktor.f4))
 })
 let textZeile = ""
 if (!(pins.simulator())) {
@@ -81,8 +84,9 @@ if (!(pins.simulator())) {
 }
 loops.everyInterval(500, function () {
     matrix.comment("folgender Block ist in Pins - Tastaturen")
-    pins.raiseKeyboardEvent(true)
     if (pins.rtc_connected()) {
         Uhrprogramm()
+    } else {
+        pins.raiseKeyboardEvent(true)
     }
 })
