@@ -1,7 +1,7 @@
 function GitHub () {
     matrix.comment("calliope-net/matrix-kb-83")
     matrix.comment("Module: OLED 128x128")
-    matrix.comment("optional: I²C KeyPad")
+    matrix.comment("optional: I²C KeyPad; RTC")
     matrix.comment("2 Erweiterungen")
     matrix.comment("calliope-net/pins")
     matrix.comment("calliope-net/matrix")
@@ -25,6 +25,16 @@ input.onButtonEvent(Button.B, input.buttonEventClick(), function () {
     matrix.rasterCircle(64, 64, 40)
     matrix.displayMatrix()
 })
+function Uhrprogramm () {
+    pins.rtc_read()
+    pins.rtc_25led(pins.rtc_e25led.Zeit)
+    matrix.writeClock(24, 23, 24, pins.rtc_get_int(pins.pins_rtc_eRegister(pins.rtc_eRegister.Stunde)), pins.rtc_get_int(pins.pins_rtc_eRegister(pins.rtc_eRegister.Minute)))
+    matrix.writeDigits(13, 0, pins.rtc_get_string(pins.rtc_eFormat.ddMM20yy), 8, -2, matrix.eTransparent.u, matrix.matrix_eFaktor(matrix.eFaktor.f1), matrix.matrix_eFaktor(matrix.eFaktor.f3))
+    matrix.comment("gedreht")
+    matrix.imageArrayDigit(pins.rtc_get_string(pins.rtc_eFormat.hhmss))
+    matrix.writeImageArray(matrix.imageArrayDrehen(matrix.getImages(), matrix.eZeichenDrehen.links), 0, 64, 16, 0, matrix.eTransparent.u, matrix.matrix_eFaktor(matrix.eFaktor.f2), matrix.matrix_eFaktor(matrix.eFaktor.f2))
+    matrix.displayMatrix()
+}
 input.onButtonEvent(Button.A, input.buttonEventValue(ButtonEvent.Hold), function () {
     matrix.displayAnimation(matrix.beispielRegen16x8(), 0, 0, matrix.matrix_eFaktor(matrix.eFaktor.f4), matrix.matrix_eFaktor(matrix.eFaktor.f2), 500, 0, 7)
 })
@@ -63,11 +73,16 @@ input.onButtonEvent(Button.B, input.buttonEventValue(ButtonEvent.Hold), function
     matrix.displayAnimation(matrix.matrix_Images(), 0, 64, matrix.matrix_eFaktor(matrix.eFaktor.f4), matrix.matrix_eFaktor(matrix.eFaktor.f4))
 })
 let textZeile = ""
-matrix.init(matrix.ePages.y128)
-matrix.writeTextCharset(0, 0, matrix.matrix_text("matrix-kb-83"))
-matrix.writeTextCharset(15, 7, matrix.matrix_text("(128,128)"))
-matrix.displayMatrix()
-loops.everyInterval(200, function () {
+if (!(pins.simulator())) {
+    matrix.init(matrix.ePages.y128)
+    matrix.writeTextCharset(0, 0, matrix.matrix_text("matrix-kb-83"))
+    matrix.writeTextCharset(15, 7, matrix.matrix_text("(128,128)"))
+    matrix.displayMatrix()
+}
+loops.everyInterval(500, function () {
     matrix.comment("folgender Block ist in Pins - Tastaturen")
     pins.raiseKeyboardEvent(true)
+    if (pins.rtc_connected()) {
+        Uhrprogramm()
+    }
 })
