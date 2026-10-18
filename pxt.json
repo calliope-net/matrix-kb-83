@@ -1,5 +1,6 @@
 {
     "name": "matrix-kb-83",
+    "version": "0.1.0",
     "description": "",
     "dependencies": {
         "core": "*",
