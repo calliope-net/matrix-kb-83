@@ -7,8 +7,13 @@ function GitHub () {
     matrix.comment("calliope-net/matrix")
 }
 pins.onKeyboardEvent(function (zeichenCode, zeichenText, isASCII) {
+    matrix.comment("'wenn Taste..' Block ist in Pins - Tastaturen")
+    if (pins.rtc_connected()) {
+        matrix.clearMatrix(1, 1)
+        matrix.writeTextCharset(1, 11, pins.rtc_set_key(zeichenCode))
+    }
     textZeile = "" + textZeile + zeichenText
-    matrix.writeTextCharset(3, 0, textZeile)
+    matrix.writeTextCharset(7, 0, textZeile)
     matrix.displayMatrix()
 })
 input.onButtonEvent(Button.A, input.buttonEventClick(), function () {
@@ -27,7 +32,6 @@ input.onButtonEvent(Button.B, input.buttonEventClick(), function () {
 })
 function Uhrprogramm () {
     matrix.clearMatrix(8, 15)
-    matrix.writeTextCharset(11, 0, pins.rtc_set_key(pins.keyboard_read()))
     pins.rtc_read()
     pins.rtc_25led(pins.rtc_e25led.Zeit)
     matrix.writeClock(24, 23, 24, pins.rtc_get_int(pins.pins_rtc_eRegister(pins.rtc_eRegister.Stunde)), pins.rtc_get_int(pins.pins_rtc_eRegister(pins.rtc_eRegister.Minute)))
@@ -73,7 +77,7 @@ input.onButtonEvent(Button.B, input.buttonEventValue(ButtonEvent.Hold), function
         . . # . . . . . . . # . # . # # # . # . . # # . . . . . . . . .
         . . # # # # . # . . . . . . . . . . . . . # . . . . . . . . . .
         `))
-    matrix.displayAnimation(matrix.matrix_Images(), 8, 16, matrix.matrix_eFaktor(matrix.eFaktor.f4), matrix.matrix_eFaktor(matrix.eFaktor.f4))
+    matrix.displayAnimation(matrix.matrix_Images(), 0, 16, matrix.matrix_eFaktor(matrix.eFaktor.f4), matrix.matrix_eFaktor(matrix.eFaktor.f4))
 })
 let textZeile = ""
 if (!(pins.simulator())) {
@@ -83,10 +87,10 @@ if (!(pins.simulator())) {
     matrix.displayMatrix()
 }
 loops.everyInterval(500, function () {
-    matrix.comment("folgender Block ist in Pins - Tastaturen")
+    matrix.comment("Blöcke sind in Fortgeschritten - Pins - Tastaturen")
+    pins.raiseKeypadEvent(false)
+    pins.raiseKeyboardEvent(true)
     if (pins.rtc_connected()) {
         Uhrprogramm()
-    } else {
-        pins.raiseKeyboardEvent(true)
     }
 })
