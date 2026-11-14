@@ -34,7 +34,7 @@ function Uhrprogramm () {
     matrix.clearMatrix(8, 15)
     pins.rtc_read()
     pins.rtc_25led(pins.rtc_e25led.Zeit)
-    matrix.writeClock(24, 23, 24, pins.rtc_get_int(pins.pins_rtc_eRegister(pins.rtc_eRegister.Stunde)), pins.rtc_get_int(pins.pins_rtc_eRegister(pins.rtc_eRegister.Minute)))
+    matrix.writeClock(24, 23, 24, pins.rtc_get_int(pins.pins_rtc_eRegister(pins.rtc_eRegister.Sekunde)), pins.rtc_get_int(pins.pins_rtc_eRegister(pins.rtc_eRegister.Sekunde)))
     matrix.writeTextCharset(11, 12, pins.rtc_get_string(pins.rtc_eFormat.ddd))
     matrix.writeTextCharset(13, 0, pins.rtc_get_string(pins.rtc_eFormat.ddMM20yy), 8, -2, matrix.eTransparent.u, matrix.matrix_eFaktor(matrix.eFaktor.f1), matrix.matrix_eFaktor(matrix.eFaktor.f3))
     matrix.comment("gedreht")
