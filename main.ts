@@ -3,14 +3,14 @@ function GitHub () {
     matrix.comment("Module: OLED 128x128")
     matrix.comment("optional: I²C KeyPad; RTC")
     matrix.comment("2 Erweiterungen")
-    matrix.comment("calliope-net/pins")
     matrix.comment("calliope-net/matrix")
+    matrix.comment("calliope-pins/i2c")
 }
 pins.onKeyboardEvent(function (zeichenCode, zeichenText, isASCII) {
     matrix.comment("'wenn Taste..' Block ist in Pins - Tastaturen")
-    if (pins.rtc_connected()) {
+    if (i2c.rtc_connected()) {
         matrix.clearMatrix(1, 1)
-        matrix.writeTextCharset(1, 11, pins.rtc_set_key(zeichenCode))
+        matrix.writeTextCharset(1, 11, i2c.rtc_set_key(zeichenCode))
     }
     textZeile = "" + textZeile + zeichenText
     matrix.writeTextCharset(7, 0, textZeile)
@@ -32,13 +32,13 @@ input.onButtonEvent(Button.B, input.buttonEventClick(), function () {
 })
 function Uhrprogramm () {
     matrix.clearMatrix(8, 15)
-    pins.rtc_read()
-    pins.rtc_25led(pins.rtc_e25led.Zeit)
-    matrix.writeClock(24, 23, 24, pins.rtc_get_int(pins.pins_rtc_eRegister(pins.rtc_eRegister.Stunde)), pins.rtc_get_int(pins.pins_rtc_eRegister(pins.rtc_eRegister.Minute)))
-    matrix.writeTextCharset(11, 12, pins.rtc_get_string(pins.rtc_eFormat.ddd))
-    matrix.writeTextCharset(13, 0, pins.rtc_get_string(pins.rtc_eFormat.ddMM20yy), 8, -2, matrix.eTransparent.u, matrix.matrix_eFaktor(matrix.eFaktor.f1), matrix.matrix_eFaktor(matrix.eFaktor.f3))
+    i2c.rtc_read()
+    i2c.rtc_25led(i2c.rtc_e25led.Zeit)
+    matrix.writeClock(24, 23, 24, i2c.rtc_get_int(i2c.pins_rtc_eRegister(i2c.rtc_eRegister.Stunde)), i2c.rtc_get_int(i2c.pins_rtc_eRegister(i2c.rtc_eRegister.Minute)))
+    matrix.writeTextCharset(11, 12, i2c.rtc_get_string(i2c.rtc_eFormat.ddd))
+    matrix.writeTextCharset(13, 0, i2c.rtc_get_string(i2c.rtc_eFormat.ddMM20yy), 8, -2, matrix.eTransparent.u, matrix.matrix_eFaktor(matrix.eFaktor.f1), matrix.matrix_eFaktor(matrix.eFaktor.f3))
     matrix.comment("gedreht")
-    matrix.imageArrayDigit(pins.rtc_get_string(pins.rtc_eFormat.hhmss))
+    matrix.imageArrayDigit(i2c.rtc_get_string(i2c.rtc_eFormat.hhmss))
     matrix.writeImageArray(matrix.imageArrayDrehen(matrix.matrix_Images(), matrix.eZeichenDrehen.links), 0, 64, 16, 0, matrix.eTransparent.u, matrix.matrix_eFaktor(matrix.eFaktor.f2), matrix.matrix_eFaktor(matrix.eFaktor.f2))
     matrix.displayMatrix()
 }
@@ -80,7 +80,7 @@ input.onButtonEvent(Button.B, input.buttonEventValue(ButtonEvent.Hold), function
     matrix.displayAnimation(matrix.matrix_Images(), 0, 16, matrix.matrix_eFaktor(matrix.eFaktor.f4), matrix.matrix_eFaktor(matrix.eFaktor.f4))
 })
 let textZeile = ""
-if (!(pins.simulator())) {
+if (!(i2c.simulator())) {
     matrix.init(matrix.ePages.y128)
     matrix.writeTextCharset(0, 0, matrix.matrix_text("matrix-kb-83"))
     matrix.writeTextCharset(15, 7, matrix.matrix_text("(128,128)"))
@@ -88,9 +88,9 @@ if (!(pins.simulator())) {
 }
 loops.everyInterval(500, function () {
     matrix.comment("Blöcke sind in Fortgeschritten - Pins - Tastaturen")
-    pins.raiseKeypadEvent(false)
-    pins.raiseKeyboardEvent(true)
-    if (pins.rtc_connected()) {
+    i2c.raiseKeypadEvent(false)
+    i2c.raiseKeyboardEvent(true)
+    if (i2c.rtc_connected()) {
         Uhrprogramm()
     }
 })
